@@ -1,115 +1,56 @@
 # Deployment Guide
 
-This guide covers the complete process to deploy the Task Manager App.
-**Backend** will be deployed on **Render** (Free Tier).
-**Frontend** will be deployed on **Netlify** (Free Tier).
+## Step 1: Push Fixes to GitHub
 
-## Prerequisites
-- GitHub Account
-- Render Account (Sign up at [render.com](https://render.com))
-- Netlify Account (Sign up at [netlify.com](https://netlify.com))
-- Git installed locally
+You have already fixed the `requirements.txt` and `Procfile`. Now you need to send these changes to GitHub so Render can see them.
 
----
+Open your terminal in `d:\OLD LAPTOP\Assingment` and run:
 
-## Part 1: Prepare & Push to GitHub
+```powershell
+git add .
+git commit -m "Fix deployment config"
+git push origin main
+```
 
-1. **Verify Project Structure**:
-   Your project should look like this:
+## Step 2: Deploy Backend (Render)
+
+1. Go to [dashboard.render.com](https://dashboard.render.com).
+2. If you already created the Web Service:
+   - Click on `task-manager-backend`.
+   - Click **Manual Deploy** -> **Deploy latest commit**.
+3. If you haven't created it yet:
+   - Click **New +** -> **Web Service**.
+   - Connect your `task-manager` repo.
+   - **Root Directory**: `backend`
+   - **Build Command**: `pip install -r requirements.txt && python manage.py migrate`
+   - **Start Command**: `gunicorn taskmanager.wsgi`
+   - Click **Create Web Service**.
+
+Wait for the deploy to finish. It should say "Live".
+
+## Step 3: Connect Frontend to Backend
+
+1. Copy your Render Backend URL (e.g., `https://task-manager-backend-xyz.onrender.com`).
+2. Update `frontend/src/api.js` in your local project:
+   ```javascript
+   const api = axios.create({
+       baseURL: 'https://YOUR-RENDER-URL.onrender.com/api/',
+   });
    ```
-   / (Root)
-   ├── backend/
-   │   ├── manage.py
-   │   ├── requirements.txt
-   │   ├── Procfile
-   │   └── ...
-   ├── frontend/
-   │   ├── package.json
-   │   ├── vite.config.js
-   │   └── ...
-   └── run.md
-   ```
-
-2. **Push to GitHub**:
-   Open a terminal in the root folder (`d:\OLD LAPTOP\Assingment`) and run:
+3. Push this change:
    ```powershell
-   git add .
-   git commit -m "Prepare for deployment"
+   git add frontend/src/api.js
+   git commit -m "Point frontend to production API"
    git push origin main
    ```
 
----
+## Step 4: Deploy Frontend (Netlify)
 
-## Part 2: Deploy Backend (Render)
-
-1. **Create Web Service**:
-   - Go to [dashboard.render.com](https://dashboard.render.com).
-   - Click **New +** -> **Web Service**.
-   - Select **Build and deploy from a Git repository**.
-   - Connect your GitHub repository (`task-manager`).
-
-2. **Configure Settings**:
-   - **Name**: `task-manager-backend` (or similar)
-   - **Region**: Closest to you (e.g., Singapore)
-   - **Root Directory**: `backend` (Important!)
-   - **Runtime**: `Python 3`
-   - **Build Command**: `pip install -r requirements.txt && python manage.py migrate`
-   - **Start Command**: `gunicorn taskmanager.wsgi`
-   - **Instance Type**: Free
-
-3. **Deploy**:
-   - Click **Create Web Service**.
-   - Wait for the build to finish.
-   - Once live, copy the URL (e.g., `https://task-manager-backend.onrender.com`).
-   - **Save this URL**. You need it for the Frontend.
-
----
-
-## Part 3: Deploy Frontend (Netlify)
-
-1. **Update API URL in Frontend**:
-   - In your local project, open `frontend/src/api.js`.
-   - Replace the `baseURL` with your **Render Backend URL**:
-     ```javascript
-     const api = axios.create({
-       baseURL: 'https://task-manager-backend.onrender.com/api/', // Use YOUR Render URL
-     });
-     ```
-   - Save and Push:
-     ```powershell
-     git add frontend/src/api.js
-     git commit -m "Update API URL for production"
-     git push origin main
-     ```
-
-2. **Create New Site on Netlify**:
-   - Go to [app.netlify.com](https://app.netlify.com).
-   - Click **Add new site** -> **Import from Git**.
-   - Choose **GitHub** and select your repository.
-
-3. **Configure Build Settings**:
+1. Go to [app.netlify.com](https://app.netlify.com).
+2. **Add new site** -> **Import from Git** -> **GitHub**.
+3. Select your `task-manager` repo.
+4. Settings:
    - **Base directory**: `frontend`
    - **Build command**: `npm run build`
    - **Publish directory**: `dist`
-
-4. **Deploy**:
-   - Click **Deploy Site**.
-   - Netlify will build your site. Once done, you will get a live URL (e.g., `https://your-site.netlify.app`).
-
----
-
-## Part 4: Final Verification
-
-1. Open your Netlify URL.
-2. The app should load.
-3. Try adding a task. It should persist (saved to the backend).
-   *(Note: On Render's free tier, the SQLite database is ephemeral. Data will reset if the server restarts. For persistent data, you would need a PostgreSQL database, but that is outside the scope of this simple assignment).*
-
----
-
-## Bonus: How to Run Locally Again
-
-If you want to run locally after deployment:
-1. Change `frontend/src/api.js` back to `http://localhost:8000/api/`.
-2. Start Backend: `python backend/manage.py runserver` (in `backend/` folder).
-3. Start Frontend: `npm run dev` (in `frontend/` folder).
+5. Click **Deploy Site**.
