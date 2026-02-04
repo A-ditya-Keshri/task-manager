@@ -9,3 +9,5 @@ db.sqlite3
 node_modules/
 dist/
 .DS_Store
+run.md
+run.md
