@@ -74,22 +74,13 @@ function App() {
         <Header />
         <main>
           <TaskForm onAddTask={handleAddTask} />
-          {loading ? (
-            <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600 mx-auto"></div>
-              <p className="mt-4 text-gray-500">Loading your tasks...</p>
-            </div>
-          ) : (
-            <TaskList
-              tasks={tasks}
-              onToggle={handleToggleTask}
-              onDelete={handleDeleteTask}
-            />
-          )}
+          <TaskList
+            tasks={tasks}
+            onToggle={handleToggleTask}
+            onDelete={handleDeleteTask}
+          />
         </main>
-        <footer className="mt-16 text-center text-gray-400 text-sm pb-8">
-          <p>&copy; {new Date().getFullYear()} Task Manager App</p>
-        </footer>
+
       </div>
     </div>
   );

@@ -13,8 +13,8 @@ export default function TaskItem({ task, onToggle, onDelete }) {
                 <button
                     onClick={handleToggle}
                     className={`mt-0.5 flex-shrink-0 transition-all duration-300 ${task.completed
-                            ? 'text-green-500 scale-110'
-                            : 'text-gray-300 hover:text-indigo-500 hover:scale-110'
+                        ? 'text-green-500 scale-110'
+                        : 'text-gray-300 hover:text-indigo-500 hover:scale-110'
                         }`}
                     aria-label={task.completed ? "Mark as incomplete" : "Mark as complete"}
                 >
@@ -27,8 +27,8 @@ export default function TaskItem({ task, onToggle, onDelete }) {
                 <span
                     onClick={handleToggle}
                     className={`text-lg font-medium transition-all duration-300 cursor-pointer select-none break-all ${task.completed
-                            ? 'text-gray-400 line-through decoration-2 decoration-gray-200'
-                            : 'text-gray-700 group-hover:text-gray-900'
+                        ? 'text-gray-400 line-through decoration-2 decoration-gray-200'
+                        : 'text-gray-700 group-hover:text-gray-900'
                         }`}
                 >
                     {task.title}
@@ -37,7 +37,7 @@ export default function TaskItem({ task, onToggle, onDelete }) {
 
             <button
                 onClick={() => onDelete(task.id)}
-                className="ml-2 p-2 text-gray-400 transition-all duration-200 rounded-lg opacity-0 lg:opacity-0 lg:translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 focus:opacity-100 focus:translate-x-0 hover:bg-red-50 hover:text-red-500 active:bg-red-100 md:opacity-100 md:translate-x-0"
+                className="ml-2 p-2 text-gray-400 transition-all duration-200 rounded-lg hover:bg-red-50 hover:text-red-500 active:bg-red-100"
                 aria-label="Delete task"
             >
                 <Trash2 className="w-5 h-5" />
